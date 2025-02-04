@@ -108,26 +108,37 @@
             background-color: #ff85a2;
             color: white;
         }
-        #heart {
-            font-size: 100px;
+        #heart-container {
             display: none;
-            margin-top: 20px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 150px;
+            color: red;
+            text-align: center;
+            font-weight: bold;
+            animation: pulse 1s infinite alternate;
         }
-        .floating-heart {
+        @keyframes pulse {
+            0% { transform: scale(1) translate(-50%, -50%); }
+            100% { transform: scale(1.2) translate(-50%, -50%); }
+        }
+        .balloon {
             position: absolute;
-            font-size: 24px;
-            color: pink;
-            animation: floatUp 3s linear forwards;
+            font-size: 50px;
+            color: #ff4d6d;
+            animation: floatUp 4s linear forwards;
         }
         @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0px) scale(1); }
-            100% { opacity: 0; transform: translateY(-150px) scale(1.5); }
+            0% { transform: translateY(0px) scale(1); opacity: 1; }
+            100% { transform: translateY(-300px) scale(1.2); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="envelope-text">Made by Henry for Jordan</div>
-    <div class="envelope" onclick="openEnvelope()">
+    <div class="envelope" id="envelope">
         <div class="top-flap"></div>
         <div class="bottom-flap"></div>
         <div class="message">💌 Tap to Open 💌</div>
@@ -135,46 +146,45 @@
     <div class="hidden-content" id="hiddenContent">
         <h1>Will you be my Valentine? ❤️</h1>
         <div class="container" id="buttonContainer">
-            <button class="btn yes-btn" onclick="showHeart()">Yes</button>
+            <button class="btn yes-btn" onclick="showCelebration()">Yes</button>
             <button class="btn no-btn" onclick="addMoreYes()">No</button>
         </div>
-        <div id="heart">❤️</div>
     </div>
+    <div id="heart-container">❤️ YAY!!! ❤️</div>
     <script>
+        document.getElementById("envelope").addEventListener("click", openEnvelope);
         function openEnvelope() {
-            document.querySelector(".envelope").classList.add("opened");
-            generateHearts();
+            document.getElementById("envelope").classList.add("opened");
             setTimeout(() => {
-                document.querySelector(".envelope").style.display = "none";
+                document.getElementById("envelope").style.display = "none";
                 document.getElementById("hiddenContent").style.display = "block";
             }, 800);
         }
-        function showHeart() {
-            document.getElementById("heart").style.display = "block";
+        function showCelebration() {
+            document.getElementById("heart-container").style.display = "block";
+            generateBalloons();
+        }
+        function generateBalloons() {
+            for (let i = 0; i < 10; i++) {
+                let balloon = document.createElement("div");
+                balloon.innerHTML = "🎈";
+                balloon.className = "balloon";
+                balloon.style.left = Math.random() * window.innerWidth + "px";
+                balloon.style.bottom = "50%";
+                document.getElementById("heart-container").appendChild(balloon);
+                setTimeout(() => balloon.remove(), 4000);
+            }
         }
         function addMoreYes() {
             let btn = document.createElement("button");
             btn.innerText = "Yes";
             btn.className = "btn yes-btn";
-            btn.style.fontSize = "24px";
-            btn.style.padding = "15px 30px";
-            btn.onclick = showHeart;
+            btn.onclick = showCelebration;
             btn.style.position = "absolute";
             btn.style.left = Math.random() * (window.innerWidth - 100) + "px";
             btn.style.top = Math.random() * (window.innerHeight - 100) + "px";
             btn.style.zIndex = "5";
             document.body.appendChild(btn);
-        }
-        function generateHearts() {
-            for (let i = 0; i < 15; i++) {
-                let heart = document.createElement("div");
-                heart.innerHTML = "❤️";
-                heart.className = "floating-heart";
-                heart.style.left = Math.random() * window.innerWidth + "px";
-                heart.style.top = Math.random() * window.innerHeight + "px";
-                document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 3000);
-            }
         }
     </script>
 </body>
